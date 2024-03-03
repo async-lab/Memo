@@ -11,7 +11,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 @Getter
 @Plugin(
@@ -23,21 +22,22 @@ import java.util.logging.Logger;
         authors = {BuildConstants.PLUGIN_AUTHORS}
 )
 public class Memo {
+    public static Memo instance;
+
     private final ProxyServer proxyServer;
-    private final Logger logger;
     private final Path dataDir;
     private Config config;
 
     @Inject
-    public Memo(ProxyServer server, Logger logger, @DataDirectory Path dataDir) {
+    public Memo(ProxyServer server, @DataDirectory Path dataDir) {
         this.proxyServer = server;
-        this.logger = logger;
         this.dataDir = dataDir;
+        Memo.instance = this;
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        Commands.init(this);
+        Commands.init();
         this.config = new Config(this.dataDir);
     }
 
