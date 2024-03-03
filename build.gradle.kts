@@ -9,7 +9,6 @@ val pluginUrl: String by project
 val pluginVersion: String by project
 val pluginAuthors: String by project
 val pluginDescription: String by project
-val minecraftVersion: String by project
 
 plugins {
     java

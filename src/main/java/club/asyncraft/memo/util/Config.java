@@ -1,4 +1,4 @@
-package club.asyncraft.commandshortcut.util;
+package club.asyncraft.memo.util;
 
 import lombok.Getter;
 import org.spongepowered.configurate.CommentedConfigurationNode;

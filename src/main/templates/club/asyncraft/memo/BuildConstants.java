@@ -1,6 +1,6 @@
-package club.asyncraft.commandshortcut;
+package club.asyncraft.memo;
 
-public class BuildConstatns {
+public class BuildConstants {
 
     public static final String PLUGIN_ID = "${plugin_id}";
     public static final String PLUGIN_NAME = "${plugin_name}";

@@ -1,1 +1,1 @@
-rootProject.name = "CommandShortCut"
+rootProject.name = "Memo"
