@@ -1,0 +1,40 @@
+name: publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  publish:
+    concurrency:
+      group: publish
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract version from gradle.properties
+        run: echo "VERSION=$(grep 'pluginVersion=' gradle.properties | sed 's/pluginVersion=//g')" >> $GITHUB_ENV
+
+      - name: Build with Gradle Wrapper
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean shadowJar
+
+      - name: Create GitHub Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: ${{ env.VERSION }}
+          prerelease: false
+          body: ''
+          files: |
+            ./build/libs/*
