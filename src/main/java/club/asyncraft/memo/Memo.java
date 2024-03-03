@@ -1,7 +1,7 @@
-package club.asyncraft.commandshortcut;
+package club.asyncraft.memo;
 
-import club.asyncraft.commandshortcut.util.Commands;
-import club.asyncraft.commandshortcut.util.Config;
+import club.asyncraft.memo.util.Commands;
+import club.asyncraft.memo.util.Config;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -15,21 +15,21 @@ import java.util.logging.Logger;
 
 @Getter
 @Plugin(
-        id = BuildConstatns.PLUGIN_ID,
-        name = BuildConstatns.PLUGIN_NAME,
-        version = BuildConstatns.PLUGIN_VERSION,
-        description = BuildConstatns.PLUGIN_DESCRIPTION,
-        url = BuildConstatns.PLUGIN_URL,
-        authors = {BuildConstatns.PLUGIN_AUTHORS}
+        id = BuildConstants.PLUGIN_ID,
+        name = BuildConstants.PLUGIN_NAME,
+        version = BuildConstants.PLUGIN_VERSION,
+        description = BuildConstants.PLUGIN_DESCRIPTION,
+        url = BuildConstants.PLUGIN_URL,
+        authors = {BuildConstants.PLUGIN_AUTHORS}
 )
-public class CommandShortCut {
+public class Memo {
     private final ProxyServer proxyServer;
     private final Logger logger;
     private final Path dataDir;
     private Config config;
 
     @Inject
-    public CommandShortCut(ProxyServer server, Logger logger, @DataDirectory Path dataDir) {
+    public Memo(ProxyServer server, Logger logger, @DataDirectory Path dataDir) {
         this.proxyServer = server;
         this.logger = logger;
         this.dataDir = dataDir;

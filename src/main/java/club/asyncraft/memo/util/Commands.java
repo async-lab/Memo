@@ -1,6 +1,6 @@
-package club.asyncraft.commandshortcut.util;
+package club.asyncraft.memo.util;
 
-import club.asyncraft.commandshortcut.CommandShortCut;
+import club.asyncraft.memo.Memo;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.velocitypowered.api.command.BrigadierCommand;
@@ -15,11 +15,11 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 public class Commands {
-    public static void init(CommandShortCut plugin) {
+    public static void init(Memo plugin) {
         ProxyServer proxyServer = plugin.getProxyServer();
         CommandManager commandManager = proxyServer.getCommandManager();
 
-        LiteralCommandNode<CommandSource> cscsNode = BrigadierCommand.literalArgumentBuilder("cscs")
+        LiteralCommandNode<CommandSource> memoRootNode = BrigadierCommand.literalArgumentBuilder("memo")
                 .executes(context -> {
                     try {
                         CommandSource source = context.getSource();
@@ -45,6 +45,6 @@ public class Commands {
                 })
                 .build();
 
-        commandManager.register(commandManager.metaBuilder("cscs").plugin(plugin).build(), new BrigadierCommand(cscsNode));
+        commandManager.register(commandManager.metaBuilder("memo").plugin(plugin).build(), new BrigadierCommand(memoRootNode));
     }
 }
