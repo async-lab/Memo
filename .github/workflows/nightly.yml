@@ -1,0 +1,36 @@
+name: nightly
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  nightly:
+    concurrency:
+      group: nightly
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: shadowJar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean shadowJar
+
+      - name: Update Nightly Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'nightly'
+          name: 'Nightly $$-${{ github.run_id }}'
+          prerelease: false
+          body: 'nightly version'
+          files: |
+            ./build/libs/*
