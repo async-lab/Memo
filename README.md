@@ -7,4 +7,5 @@
 
 ## Command
 
-`/cscs`
+`/memo`
+`/memo sectionName`
