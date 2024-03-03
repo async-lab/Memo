@@ -7,5 +7,5 @@
 
 ## Command
 
-`/memo`
+`/memo`  
 `/memo sectionName`
