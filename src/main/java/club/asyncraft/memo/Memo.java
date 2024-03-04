@@ -4,6 +4,7 @@ import club.asyncraft.memo.util.Commands;
 import club.asyncraft.memo.util.Config;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.player.PlayerSettingsChangedEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
@@ -39,6 +40,13 @@ public class Memo {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         Commands.init();
         this.config = new Config(this.dataDir);
+        this.config.init();
+    }
+
+    @Subscribe
+    public void onPlayerSettingsChangedEvent(PlayerSettingsChangedEvent event) {
+        event.getPlayerSettings().getLocale();
+        //TODO
     }
 
     private void register(Object x) {
