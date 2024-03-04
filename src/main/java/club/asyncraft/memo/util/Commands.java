@@ -61,15 +61,15 @@ public class Commands {
 
             if (sub.equals("reload")) {
                 if (!source.hasPermission("memo.reload")) {
-                    source.sendMessage(GlobalTranslator.render(Component.translatable("memo.no_permission"), Locale.CHINESE));
+                    source.sendMessage(GlobalTranslator.render(Component.translatable("memo.no_permission"), Locale.SIMPLIFIED_CHINESE));
                     return Command.SINGLE_SUCCESS;
                 }
                 Memo.instance.getConfig().init();
-                source.sendMessage(GlobalTranslator.render(Component.translatable("memo.reloaded"), Locale.CHINESE));
+                source.sendMessage(GlobalTranslator.render(Component.translatable("memo.reloaded"), Locale.SIMPLIFIED_CHINESE));
             } else if (sub.equals("show")) {
                 return showExecutor(context);
             } else {
-                source.sendMessage(GlobalTranslator.render(Component.translatable("memo.wrong_usage"), Locale.CHINESE));
+                source.sendMessage(GlobalTranslator.render(Component.translatable("memo.wrong_usage"), Locale.SIMPLIFIED_CHINESE));
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);

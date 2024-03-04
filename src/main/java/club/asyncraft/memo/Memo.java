@@ -10,9 +10,14 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
+import lombok.extern.java.Log;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.translation.GlobalTranslator;
 
 import java.nio.file.Path;
+import java.util.Locale;
 
+@Log
 @Getter
 @Plugin(
         id = BuildConstants.PLUGIN_ID,
@@ -41,6 +46,7 @@ public class Memo {
         Commands.init();
         this.config = new Config(this.dataDir);
         this.config.init();
+        this.proxyServer.sendMessage(GlobalTranslator.render(Component.translatable("memo.loaded"), Locale.SIMPLIFIED_CHINESE));
     }
 
     @Subscribe
