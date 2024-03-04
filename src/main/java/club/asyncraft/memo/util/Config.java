@@ -30,7 +30,7 @@ public class Config {
         this.rootNodeMap = new HashMap<>();
 
         TranslationRegistry registry = TranslationRegistry.create(Key.key("memo"));
-        List<Locale> locales = List.of(Locale.CHINESE, Locale.US);
+        List<Locale> locales = List.of(Locale.SIMPLIFIED_CHINESE, Locale.US);
         for (Locale locale : locales) {
             registry.registerAll(locale, ResourceBundle.getBundle("club.asyncraft.memo.Bundle", locale, UTF8ResourceBundleControl.get()), true);
         }
