@@ -4,3 +4,9 @@ lobby:
     - "Isn't <blue><u><click:open_url:'https://docs.advntr.dev/minimessage'>MiniMessage</click></u></blue> fun?"
   example1:
     - "This is an example of a lobby message."
+survive:
+  main:
+    - "main is the important section"
+    - "/memo or /memo show will be equivalent to /memo show main"
+  example1:
+    - "This is an example of a survive message."

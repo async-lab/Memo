@@ -8,4 +8,5 @@
 ## Command
 
 `/memo`  
-`/memo sectionName`
+`/memo show sectionName`  
+`/memo reload`
