@@ -1,7 +1,6 @@
 package club.asyncraft.memo;
 
-import club.asyncraft.memo.util.Commands;
-import club.asyncraft.memo.util.Config;
+import club.asyncraft.memo.util.Utils;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerSettingsChangedEvent;
@@ -11,11 +10,9 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 import lombok.extern.java.Log;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.translation.GlobalTranslator;
+import org.slf4j.Logger;
 
 import java.nio.file.Path;
-import java.util.Locale;
 
 @Log
 @Getter
@@ -33,11 +30,13 @@ public class Memo {
     private final ProxyServer proxyServer;
     private final Path dataDir;
     private Config config;
+    private final Logger logger;
 
     @Inject
-    public Memo(ProxyServer server, @DataDirectory Path dataDir) {
+    public Memo(ProxyServer server, @DataDirectory Path dataDir, Logger logger) {
         this.proxyServer = server;
         this.dataDir = dataDir;
+        this.logger = logger;
         Memo.instance = this;
     }
 
@@ -46,7 +45,7 @@ public class Memo {
         Commands.init();
         this.config = new Config(this.dataDir);
         this.config.init();
-        this.proxyServer.sendMessage(GlobalTranslator.render(Component.translatable("memo.loaded"), Locale.SIMPLIFIED_CHINESE));
+        logger.info(Utils.getTextComponent("memo.loaded").content());
     }
 
     @Subscribe
