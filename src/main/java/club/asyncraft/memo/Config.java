@@ -4,7 +4,6 @@ import club.asyncraft.memo.util.Reference;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.kyori.adventure.translation.TranslationRegistry;
 import net.kyori.adventure.util.UTF8ResourceBundleControl;
@@ -39,9 +38,6 @@ public class Config {
             this.loadFile("config.yml");
             this.loadFile("server.yml");
             this.locale = Locale.forLanguageTag(this.getRootNode("config.yml").orElseThrow().node("lang").getString("en-US"));
-
-            Memo.instance.getProxyServer().sendMessage(Component.text(this.getRootNode("config.yml").orElseThrow().node("lang").getString("en-US")));
-            Memo.instance.getProxyServer().sendMessage(Component.text(this.locale.getDisplayName()));
 
             TranslationRegistry registry = TranslationRegistry.create(Key.key("memo"));
             GlobalTranslator.translator().removeSource(registry);
