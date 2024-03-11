@@ -1,8 +1,10 @@
 package club.asyncraft.memo;
 
+import club.asyncraft.memo.util.Reference;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.kyori.adventure.translation.TranslationRegistry;
 import net.kyori.adventure.util.UTF8ResourceBundleControl;
@@ -36,14 +38,17 @@ public class Config {
         try {
             this.loadFile("config.yml");
             this.loadFile("server.yml");
-            this.locale = Locale.forLanguageTag(this.getRootNode("config.yml").orElseThrow().node("lang").getString("en_US"));
+            this.locale = Locale.forLanguageTag(this.getRootNode("config.yml").orElseThrow().node("lang").getString("en-US"));
+
+            Memo.instance.getProxyServer().sendMessage(Component.text(this.getRootNode("config.yml").orElseThrow().node("lang").getString("en-US")));
+            Memo.instance.getProxyServer().sendMessage(Component.text(this.locale.getDisplayName()));
 
             TranslationRegistry registry = TranslationRegistry.create(Key.key("memo"));
             GlobalTranslator.translator().removeSource(registry);
 
-//            for (Locale locale : Reference.locales) {
-            registry.registerAll(this.locale, ResourceBundle.getBundle("club.asyncraft.memo.Bundle", locale, UTF8ResourceBundleControl.get()), true);
-//            }
+            for (Locale locale : Reference.locales) {
+                registry.registerAll(locale, ResourceBundle.getBundle("club.asyncraft.memo.Bundle", locale, UTF8ResourceBundleControl.get()), true);
+            }
             GlobalTranslator.translator().addSource(registry);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);
