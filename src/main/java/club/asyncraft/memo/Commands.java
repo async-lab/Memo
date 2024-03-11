@@ -1,6 +1,6 @@
-package club.asyncraft.memo.util;
+package club.asyncraft.memo;
 
-import club.asyncraft.memo.Memo;
+import club.asyncraft.memo.util.Utils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -11,11 +11,8 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.extern.java.Log;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.translation.GlobalTranslator;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
-import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -61,15 +58,15 @@ public class Commands {
 
             if (sub.equals("reload")) {
                 if (!source.hasPermission("memo.reload")) {
-                    source.sendMessage(GlobalTranslator.render(Component.translatable("memo.no_permission"), Locale.SIMPLIFIED_CHINESE));
+                    source.sendMessage(Utils.getTextComponent("memo.no_permission"));
                     return Command.SINGLE_SUCCESS;
                 }
                 Memo.instance.getConfig().init();
-                source.sendMessage(GlobalTranslator.render(Component.translatable("memo.reloaded"), Locale.SIMPLIFIED_CHINESE));
+                source.sendMessage(Utils.getTextComponent("memo.reloaded"));
             } else if (sub.equals("show")) {
                 return showExecutor(context);
             } else {
-                source.sendMessage(GlobalTranslator.render(Component.translatable("memo.wrong_usage"), Locale.SIMPLIFIED_CHINESE));
+                source.sendMessage(Utils.getTextComponent("memo.wrong_usage"));
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);
@@ -82,7 +79,7 @@ public class Commands {
         try {
             CommandSource source = context.getSource();
             if (!(source instanceof Player player)) {
-                source.sendMessage(Component.text("This command can only be executed by players"));
+                source.sendMessage(Utils.getTextComponent("memo.only_player"));
                 return Command.SINGLE_SUCCESS;
             }
 
