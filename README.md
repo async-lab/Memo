@@ -1,4 +1,4 @@
-# CommandShortCut
+# Memo
 
 ## Config
 
