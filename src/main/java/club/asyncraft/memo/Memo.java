@@ -40,11 +40,14 @@ public class Memo {
         Memo.instance = this;
     }
 
-    @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public void init() {
         Commands.init();
         this.config = new Config(this.dataDir);
-        this.config.init();
+    }
+
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        this.init();
         logger.info(Utils.getTextComponent("memo.loaded").content());
     }
 

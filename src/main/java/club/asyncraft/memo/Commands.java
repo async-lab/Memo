@@ -56,17 +56,17 @@ public class Commands {
 
             CommandSource source = context.getSource();
 
-            if (sub.equals("reload")) {
-                if (!source.hasPermission("memo.reload")) {
-                    source.sendMessage(Utils.getTextComponent("memo.no_permission"));
-                    return Command.SINGLE_SUCCESS;
+            switch (sub) {
+                case "reload" -> {
+                    if (!source.hasPermission("memo.reload")) {
+                        source.sendMessage(Utils.getTextComponent("memo.no_permission"));
+                        return Command.SINGLE_SUCCESS;
+                    }
+                    Memo.instance.init();
+                    source.sendMessage(Utils.getTextComponent("memo.reloaded"));
                 }
-                Memo.instance.getConfig().init();
-                source.sendMessage(Utils.getTextComponent("memo.reloaded"));
-            } else if (sub.equals("show")) {
-                return showExecutor(context);
-            } else {
-                source.sendMessage(Utils.getTextComponent("memo.wrong_usage"));
+                case "show" -> showExecutor(context);
+                default -> source.sendMessage(Utils.getTextComponent("memo.wrong_usage"));
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);

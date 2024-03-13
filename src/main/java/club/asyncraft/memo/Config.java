@@ -31,9 +31,6 @@ public class Config {
     public Config(Path dataDir) {
         this.dataDir = dataDir;
         this.rootNodeMap = new HashMap<>();
-    }
-
-    public void init() {
         try {
             this.loadFile("config.yml");
             this.loadFile("server.yml");
