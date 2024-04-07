@@ -2,6 +2,7 @@ package club.asyncraft.memo;
 
 import club.asyncraft.memo.util.Reference;
 import club.asyncraft.memo.util.Utils;
+import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import lombok.Getter;
 import lombok.extern.java.Log;
@@ -32,7 +33,7 @@ public class Config {
     private final Path dataDir;
     private final Map<String, CommentedConfigurationNode> rootNodeMap;
 
-    public Config(Path dataDir) throws SerializationException {
+    public Config(Path dataDir) {
         this.dataDir = dataDir;
         this.rootNodeMap = new HashMap<>();
         try {
@@ -56,8 +57,9 @@ public class Config {
     private void setBroadcast() {
         CommentedConfigurationNode broadcastNode = this.getRootNode("config.yml").orElseThrow().node("broadcast");
         if (broadcastNode.node("enable").getBoolean()) {
-            Memo.instance.getProxyServer().getScheduler().buildTask(Memo.instance, () -> {
-                Memo.instance.getProxyServer().getAllPlayers()
+            ProxyServer proxyServer = Memo.instance.getProxyServer();
+            proxyServer.getScheduler().buildTask(Memo.instance, () -> {
+                proxyServer.getAllPlayers()
                         .forEach(player -> {
                             try {
                                 Optional<ServerConnection> serverConnectionOptional = player.getCurrentServer();
@@ -94,7 +96,9 @@ public class Config {
     private void loadFile(String fileName) throws ConfigurateException {
         File dataDirFile = dataDir.toFile();
         if (!dataDirFile.exists()) {
-            dataDirFile.mkdir();
+            if (!dataDirFile.mkdir()) {
+                throw new RuntimeException("ERROR: Can't create data directory (permissions/filesystem error?)");
+            }
         }
 
         File dataFile = new File(dataDirFile, fileName);
