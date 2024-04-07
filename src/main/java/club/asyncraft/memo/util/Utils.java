@@ -11,11 +11,19 @@ import java.util.Locale;
 public class Utils {
 
     public static TextComponent getTextComponent(@NotNull String key) {
-        return (TextComponent) GlobalTranslator.render(Component.translatable(key), Memo.instance.getConfig().getLocale());
+        return getTextComponent(key, Memo.instance.getConfig().getLocale());
+    }
+
+    public static String getTextComponentContent(@NotNull String key) {
+        return getTextComponent(key).content();
     }
 
     public static TextComponent getTextComponent(@NotNull String key, Locale locale) {
         return (TextComponent) GlobalTranslator.render(Component.translatable(key), locale);
+    }
+
+    public static String getTextComponentContent(@NotNull String key, Locale locale) {
+        return getTextComponent(key, locale).content();
     }
 
 }
