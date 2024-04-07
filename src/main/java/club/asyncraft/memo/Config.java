@@ -88,7 +88,6 @@ public class Config {
                                             player.sendRichMessage(text);
                                         }
                                     }
-                                    Memo.instance.getLogger().info(MessageFormat.format(Utils.getTextComponentContent("memo.broadcast", this.locale), serverName));
                                 }
                             } catch (SerializationException e) {
                                 throw new RuntimeException(e);
