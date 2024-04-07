@@ -34,10 +34,14 @@ repositories {
     maven("sonatype") {
         url = uri("https://oss.sonatype.org/content/groups/public/")
     }
+    maven("jitpack") {
+        url = uri("https://jitpack.io")
+    }
     mavenCentral()
 }
 
 dependencies {
+    implementation("com.github.dsx137:jable:1.0.4")
     compileOnly("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
@@ -52,8 +56,8 @@ java {
 tasks.jar {
     manifest {
         attributes(
-                "Implementation-Title" to pluginName,
-                "Implementation-Version" to pluginVersion
+            "Implementation-Title" to pluginName,
+            "Implementation-Version" to pluginVersion
         )
     }
 }
@@ -62,13 +66,13 @@ val templateSource = file("src/main/templates")
 val templateDest = layout.buildDirectory.dir("generated/sources/templates")
 val generateTemplates by tasks.registering(Copy::class) {
     val props = mapOf(
-            "plugin_id" to pluginId,
-            "plugin_name" to pluginName,
-            "plugin_group" to pluginGroup,
-            "plugin_version" to pluginVersion,
-            "plugin_authors" to pluginAuthors,
-            "plugin_url" to pluginUrl,
-            "plugin_description" to pluginDescription
+        "plugin_id" to pluginId,
+        "plugin_name" to pluginName,
+        "plugin_group" to pluginGroup,
+        "plugin_version" to pluginVersion,
+        "plugin_authors" to pluginAuthors,
+        "plugin_url" to pluginUrl,
+        "plugin_description" to pluginDescription
     )
     inputs.properties(props)
 
