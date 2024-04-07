@@ -1,6 +1,8 @@
 package club.asyncraft.memo;
 
 import club.asyncraft.memo.util.Reference;
+import club.asyncraft.memo.util.Utils;
+import com.velocitypowered.api.proxy.ServerConnection;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.kyori.adventure.key.Key;
@@ -9,6 +11,7 @@ import net.kyori.adventure.translation.TranslationRegistry;
 import net.kyori.adventure.util.UTF8ResourceBundleControl;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
@@ -17,6 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 @Log
@@ -28,7 +32,7 @@ public class Config {
     private final Path dataDir;
     private final Map<String, CommentedConfigurationNode> rootNodeMap;
 
-    public Config(Path dataDir) {
+    public Config(Path dataDir) throws SerializationException {
         this.dataDir = dataDir;
         this.rootNodeMap = new HashMap<>();
         try {
@@ -45,6 +49,37 @@ public class Config {
             GlobalTranslator.translator().addSource(registry);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);
+        }
+        this.setBroadcast();
+    }
+
+    private void setBroadcast() {
+        CommentedConfigurationNode broadcastNode = this.getRootNode("config.yml").orElseThrow().node("broadcast");
+        if (broadcastNode.node("enable").getBoolean()) {
+            Memo.instance.getProxyServer().getScheduler().buildTask(Memo.instance, () -> {
+                Memo.instance.getProxyServer().getAllPlayers()
+                        .forEach(player -> {
+                            try {
+                                Optional<ServerConnection> serverConnectionOptional = player.getCurrentServer();
+                                if (serverConnectionOptional.isPresent()) {
+                                    String serverName = serverConnectionOptional.get().getServerInfo().getName();
+                                    Optional<CommentedConfigurationNode> serverRootNodeOptional = this.getRootNode("server.yml");
+                                    if (serverRootNodeOptional.isPresent()) {
+                                        CommentedConfigurationNode serverRootNode = serverRootNodeOptional.get();
+                                        String[] texts = serverRootNode.node(serverName, "broadcast").get(String[].class);
+                                        if (texts != null) {
+                                            for (String text : texts) {
+                                                player.sendRichMessage(text);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (SerializationException e) {
+                                throw new RuntimeException(e);
+                            }
+                            player.sendMessage(Utils.getTextComponent("broadcast"));
+                        });
+            }).repeat(broadcastNode.node("interval").getInt(), TimeUnit.SECONDS).schedule();
         }
     }
 
