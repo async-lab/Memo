@@ -53,17 +53,20 @@ public class Config {
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);
         }
+        this.setBroadcast();
+    }
+
+    public void unload() {
         if (this.task != null) {
             this.task.cancel();
         }
-        this.setBroadcast();
     }
 
     private void setBroadcast() {
         CommentedConfigurationNode broadcastNode = this.getRootNode("config.yml").orElseThrow().node("broadcast");
         if (broadcastNode.node("enable").getBoolean()) {
             ProxyServer proxyServer = Memo.instance.getProxyServer();
-            task = proxyServer.getScheduler().buildTask(Memo.instance, () -> {
+            this.task = proxyServer.getScheduler().buildTask(Memo.instance, () -> {
                 proxyServer.getAllPlayers()
                         .forEach(player -> {
                             try {
