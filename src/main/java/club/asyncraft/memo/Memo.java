@@ -42,6 +42,7 @@ public class Memo {
 
     public void init() {
         Commands.init();
+        this.config.unload();
         this.config = new Config(this.dataDir);
     }
 
