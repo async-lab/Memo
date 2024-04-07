@@ -1,4 +1,4 @@
-name: publish
+name: stable
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 jobs:
   publish:
     concurrency:
-      group: publish
+      group: stable
       cancel-in-progress: true
     runs-on: ubuntu-latest
 

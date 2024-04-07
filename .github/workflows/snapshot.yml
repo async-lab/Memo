@@ -1,4 +1,4 @@
-name: nightly
+name: snapshot
 
 on:
   push:
@@ -6,9 +6,9 @@ on:
       - dev
 
 jobs:
-  nightly:
+  publish:
     concurrency:
-      group: nightly
+      group: snapshot
       cancel-in-progress: true
     runs-on: ubuntu-latest
 
@@ -16,21 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build with Gradle Wrapper
+      - name: shadowJar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x ./gradlew
           ./gradlew clean shadowJar
 
-      - name: Update Nightly Release
+      - name: Update Snapshot Release
         uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'nightly'
-          name: 'Nightly $$-${{ github.run_id }}'
+          tag_name: 'snapshot'
+          name: 'snapshot $$-${{ github.run_id }}'
           prerelease: false
-          body: 'nightly version'
+          body: 'snapshot version'
           files: |
             ./build/libs/*
