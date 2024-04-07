@@ -94,7 +94,11 @@ public class Commands {
                 arg = "main";
             }
 
-            String[] texts = Optional.ofNullable(rootNode.node(serverName, arg).get(String[].class)).orElseThrow();
+            String[] texts = rootNode.node(serverName, arg).get(String[].class);
+
+            if (texts == null) {
+                throw new RuntimeException("texts is null");
+            }
 
             for (String text : texts) {
                 player.sendRichMessage(text);

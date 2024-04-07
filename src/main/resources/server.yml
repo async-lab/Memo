@@ -5,6 +5,8 @@ lobby:
   example1:
     - "This is an example of a lobby message."
 survive:
+  broadcast:
+    - "This is a broadcast message."
   main:
     - "main is the important section"
     - "/memo or /memo show will be equivalent to /memo show main"
