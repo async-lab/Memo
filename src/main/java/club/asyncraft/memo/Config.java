@@ -4,6 +4,7 @@ import club.asyncraft.memo.util.Reference;
 import club.asyncraft.memo.util.Utils;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.scheduler.ScheduledTask;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.kyori.adventure.key.Key;
@@ -29,6 +30,7 @@ import java.util.logging.Level;
 public class Config {
 
     private Locale locale;
+    private ScheduledTask task;
 
     private final Path dataDir;
     private final Map<String, CommentedConfigurationNode> rootNodeMap;
@@ -51,6 +53,9 @@ public class Config {
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);
         }
+        if (this.task != null) {
+            this.task.cancel();
+        }
         this.setBroadcast();
     }
 
@@ -58,7 +63,7 @@ public class Config {
         CommentedConfigurationNode broadcastNode = this.getRootNode("config.yml").orElseThrow().node("broadcast");
         if (broadcastNode.node("enable").getBoolean()) {
             ProxyServer proxyServer = Memo.instance.getProxyServer();
-            proxyServer.getScheduler().buildTask(Memo.instance, () -> {
+            task = proxyServer.getScheduler().buildTask(Memo.instance, () -> {
                 proxyServer.getAllPlayers()
                         .forEach(player -> {
                             try {
