@@ -73,6 +73,7 @@ public class Config {
                                             for (String text : texts) {
                                                 player.sendRichMessage(text);
                                             }
+                                            Memo.instance.getLogger().info(Utils.getTextComponentContent("memo.broadcast").formatted(serverName));
                                         }
                                     }
                                 }
