@@ -2,8 +2,8 @@ package club.asyncraft.memo;
 
 import club.asyncraft.memo.util.Reference;
 import club.asyncraft.memo.util.Utils;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import lombok.Getter;
 import lombok.extern.java.Log;
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -64,33 +65,36 @@ public class Config {
 
     private void setBroadcast() {
         CommentedConfigurationNode broadcastNode = this.getRootNode("config.yml").orElseThrow().node("broadcast");
+        int interval = broadcastNode.node("interval").getInt(300);
+
         if (broadcastNode.node("enable").getBoolean()) {
+            Memo.instance.getLogger().info(MessageFormat.format(Utils.getTextComponentContent("memo.broadcast_is_enabled", this.locale), interval));
             ProxyServer proxyServer = Memo.instance.getProxyServer();
             this.task = proxyServer.getScheduler().buildTask(Memo.instance, () -> {
-                proxyServer.getAllPlayers()
-                        .forEach(player -> {
+                proxyServer.getAllServers()
+                        .forEach(server -> {
+                            String serverName = server.getServerInfo().getName();
+                            Optional<CommentedConfigurationNode> serverRootNodeOptional = this.getRootNode("server.yml");
+                            if (serverRootNodeOptional.isEmpty()) {
+                                return;
+                            }
+
                             try {
-                                Optional<ServerConnection> serverConnectionOptional = player.getCurrentServer();
-                                if (serverConnectionOptional.isPresent()) {
-                                    String serverName = serverConnectionOptional.get().getServerInfo().getName();
-                                    Optional<CommentedConfigurationNode> serverRootNodeOptional = this.getRootNode("server.yml");
-                                    if (serverRootNodeOptional.isPresent()) {
-                                        CommentedConfigurationNode serverRootNode = serverRootNodeOptional.get();
-                                        String[] texts = serverRootNode.node(serverName, "broadcast").get(String[].class);
-                                        if (texts != null) {
-                                            for (String text : texts) {
-                                                player.sendRichMessage(text);
-                                            }
-                                            Memo.instance.getLogger().info(Utils.getTextComponentContent("memo.broadcast").formatted(serverName));
+                                String[] texts = serverRootNodeOptional.get().node(serverName, "broadcast").get(String[].class);
+                                if (texts != null && texts.length > 0) {
+                                    Collection<Player> players = server.getPlayersConnected();
+                                    for (Player player : players) {
+                                        for (String text : texts) {
+                                            player.sendRichMessage(text);
                                         }
                                     }
+                                    Memo.instance.getLogger().info(MessageFormat.format(Utils.getTextComponentContent("memo.broadcast", this.locale), serverName));
                                 }
                             } catch (SerializationException e) {
                                 throw new RuntimeException(e);
                             }
-                            player.sendMessage(Utils.getTextComponent("broadcast"));
                         });
-            }).repeat(broadcastNode.node("interval").getInt(), TimeUnit.SECONDS).schedule();
+            }).repeat(interval, TimeUnit.SECONDS).schedule();
         }
     }
 

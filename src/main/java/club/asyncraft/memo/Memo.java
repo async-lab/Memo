@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerSettingsChangedEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -42,7 +43,9 @@ public class Memo {
 
     public void init() {
         Commands.init();
-        this.config.unload();
+        if (this.config != null) {
+            this.config.unload();
+        }
         this.config = new Config(this.dataDir);
     }
 
@@ -53,9 +56,15 @@ public class Memo {
     }
 
     @Subscribe
-    public void onPlayerSettingsChangedEvent(PlayerSettingsChangedEvent event) {
+    public void onPlayerSettingsChanged(PlayerSettingsChangedEvent event) {
         event.getPlayerSettings().getLocale();
         //TODO
+    }
+
+    @Subscribe
+    public void onProxyReload(ProxyReloadEvent event) {
+        this.init();
+        logger.info(Utils.getTextComponent("memo.reloaded").content());
     }
 
     private void register(Object x) {
