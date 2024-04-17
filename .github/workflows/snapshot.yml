@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - dev
+  pull_request:
+    branches:
+      - dev
 
 jobs:
   publish:
@@ -16,12 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: shadowJar
+      - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x ./gradlew
-          ./gradlew clean shadowJar
+          ./gradlew build
+
+      - name: Extract version
+        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
 
       - name: Update Snapshot Release
         uses: andelf/nightly-release@main
@@ -29,8 +35,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: 'snapshot'
-          name: 'snapshot $$-${{ github.run_id }}'
-          prerelease: false
+          name: 'snapshot-$$-${{ github.run_id }}'
+          prerelease: true
           body: 'snapshot version'
           files: |
-            ./build/libs/*
+            ./build/libs/*-all.jar
