@@ -10,6 +10,9 @@ val pluginVersion: String by project
 val pluginAuthors: String by project
 val pluginDescription: String by project
 
+group = pluginGroup
+version = pluginVersion
+
 plugins {
     java
     eclipse
@@ -17,9 +20,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
 }
-
-group = pluginGroup
-version = pluginVersion
 
 repositories {
     maven() {
@@ -53,15 +53,6 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-tasks.jar {
-    manifest {
-        attributes(
-            "Implementation-Title" to pluginName,
-            "Implementation-Version" to pluginVersion
-        )
-    }
-}
-
 val templateSource = file("src/main/templates")
 val templateDest = layout.buildDirectory.dir("generated/sources/templates")
 val generateTemplates by tasks.registering(Copy::class) {
@@ -88,8 +79,21 @@ sourceSets["main"].java.srcDirs(generateTemplates.map { it.destinationDir })
 rootProject.idea.project.settings.taskTriggers.afterSync(generateTemplates)
 project.eclipse.synchronizationTasks(generateTemplates)
 
+tasks.jar {
+    manifest {
+        attributes(
+            "Implementation-Title" to pluginName,
+            "Implementation-Version" to pluginVersion
+        )
+    }
+}
+
 tasks {
     shadowJar {
         minimize()
     }
+}
+
+tasks.build {
+    dependsOn("shadowJar")
 }

@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   publish:
@@ -19,13 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Extract version from gradle.properties
-        run: echo "VERSION=$(grep 'pluginVersion=' gradle.properties | sed 's/pluginVersion=//g')" >> $GITHUB_ENV
-
-      - name: Build with Gradle Wrapper
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x ./gradlew
-          ./gradlew clean shadowJar
+          ./gradlew build
+
+      - name: Extract version
+        run: echo "VERSION=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -37,4 +36,4 @@ jobs:
           prerelease: false
           body: ''
           files: |
-            ./build/libs/*
+            ./build/libs/*-all.jar
