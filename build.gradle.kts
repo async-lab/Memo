@@ -22,26 +22,16 @@ plugins {
 }
 
 repositories {
-    maven() {
-        url = uri("https://maven.aliyun.com/repository/public/")
-    }
-    maven() {
-        url = uri("https://maven.aliyun.com/repository/spring/")
-    }
-    maven("papermc-repo") {
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
-    maven("sonatype") {
-        url = uri("https://oss.sonatype.org/content/groups/public/")
-    }
-    maven("jitpack") {
-        url = uri("https://jitpack.io")
-    }
+    maven { url = uri("https://maven.aliyun.com/repository/public/") }
+    maven { url = uri("https://maven.aliyun.com/repository/spring/") }
+    maven("papermc-repo") { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    maven("sonatype") { url = uri("https://oss.sonatype.org/content/groups/public/") }
+    maven("jitpack") { url = uri("https://jitpack.io") }
     mavenCentral()
 }
 
 dependencies {
-    implementation("com.github.dsx137:jable:1.0.4")
+    implementation("com.github.dsx137:jable:1.0.11")
     compileOnly("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
