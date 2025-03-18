@@ -54,7 +54,7 @@ jobs:
         with:
           name: ${{ steps.get_version.outputs.version }}
           project_id: Et53O94J
-          loaders: forge
+          loaders: velocity
           game_versions: 1.12.2:1.20.6
           version_number: ${{ steps.get_version.outputs.version }}
           changelog: ${{ github.event.head_commit.message }}
