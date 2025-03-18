@@ -59,4 +59,5 @@ jobs:
           version_number: ${{ steps.get_version.outputs.version }}
           changelog: ${{ github.event.head_commit.message }}
           version_type: beta
+          upload_mode: update:replace
           files: build/libs/Memo-${{ steps.get_version.outputs.version }}-all.jar
