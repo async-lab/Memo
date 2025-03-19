@@ -34,7 +34,7 @@ jobs:
 
       - name: Extract version
         id: get_version
-        run: echo "::set-output name=version::$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')"
+        run: echo "version=$(./gradlew properties --console=plain | grep 'version:'  | sed 's/version:\s*//g')" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: andelf/nightly-release@main
@@ -48,7 +48,7 @@ jobs:
           files: ./build/libs/*-all.jar
 
       - name: Modrinth Release
-        uses: dsx137/modrinth-releaser@dev
+        uses: dsx137/modrinth-releaser@main
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
