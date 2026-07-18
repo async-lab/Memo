@@ -1,16 +1,11 @@
 package club.asyncraft.memo;
 
-import club.asyncraft.memo.util.Reference;
 import club.asyncraft.memo.util.Utils;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import lombok.Getter;
 import lombok.extern.java.Log;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.translation.GlobalTranslator;
-import net.kyori.adventure.translation.TranslationRegistry;
-import net.kyori.adventure.util.UTF8ResourceBundleControl;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -43,14 +38,6 @@ public class Config {
             this.loadFile("config.yml");
             this.loadFile("server.yml");
             this.locale = Locale.forLanguageTag(this.getRootNode("config.yml").orElseThrow().node("lang").getString("en-US"));
-
-            TranslationRegistry registry = TranslationRegistry.create(Key.key("memo"));
-            GlobalTranslator.translator().removeSource(registry);
-
-            for (Locale locale : Reference.locales) {
-                registry.registerAll(locale, ResourceBundle.getBundle("club.asyncraft.memo.Bundle", locale, UTF8ResourceBundleControl.get()), true);
-            }
-            GlobalTranslator.translator().addSource(registry);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error", e);
         }

@@ -17,31 +17,29 @@ plugins {
     java
     eclipse
     idea
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
+    id("com.gradleup.shadow") version "9.6.0"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.4.1"
 }
 
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public/") }
-    maven { url = uri("https://maven.aliyun.com/repository/spring/") }
     maven("papermc-repo") { url = uri("https://repo.papermc.io/repository/maven-public/") }
-    maven("sonatype") { url = uri("https://oss.sonatype.org/content/groups/public/") }
-    maven("jitpack") { url = uri("https://jitpack.io") }
     mavenCentral()
 }
 
 dependencies {
-    implementation("com.github.dsx137:jable:1.0.11")
-    compileOnly("org.projectlombok:lombok:1.18.20")
-    annotationProcessor("org.projectlombok:lombok:1.18.20")
+    compileOnly("org.projectlombok:lombok:1.18.46")
+    annotationProcessor("org.projectlombok:lombok:1.18.46")
 
-    compileOnly("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
-    annotationProcessor("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
+
+tasks.withType(JavaCompile::class.java).configureEach { options.encoding = "UTF-8" }
 
 val templateSource = file("src/main/templates")
 val templateDest = layout.buildDirectory.dir("generated/sources/templates")

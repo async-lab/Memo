@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Cache Gradle packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.gradle/caches
@@ -55,7 +55,7 @@ jobs:
           name: ${{ steps.get_version.outputs.version }}
           project_id: Et53O94J
           loaders: velocity
-          game_versions: 1.12.2:1.20.6
+          game_versions: 1.12.2:26.2
           version_number: ${{ steps.get_version.outputs.version }}
           changelog: ${{ github.event.head_commit.message }}
           version_type: beta
